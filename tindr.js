@@ -34,18 +34,24 @@ function handleError(err) {
     return Promise.reject(err);
 }
 
-function tinderPromise (options) {
+
+function tinderPromise(options) {
+
     return new Promise(function (resolve, reject) {
         return request(options, function (err, response, body) {
             if (!err && response.statusCode === 200) {
                 try {
-                    return resolve(JSON.parse(body));
+                    resolve(JSON.parse(body));
                 } catch (err) {
-                    return reject(err);
+                    reject(err);
+                }
+            } else {
+                try {
+                    reject(err || JSON.parse(body));
+                } catch (err) {
+                    reject('Unable to parse body: ' + err);
                 }
             }
-
-            return reject(err || JSON.parse(body));
         });
     });
 };
@@ -57,7 +63,7 @@ function tinderPromise (options) {
  * @param  {path} the endpoint
  * @return {Promise}     
  */
-function tinderGet (path) {
+function tinderGet(path) {
     var opts = configureOptions(path, null);
     opts.method = 'GET';
 
@@ -73,7 +79,7 @@ function tinderGet (path) {
  * @param  {data} if you want to pass data with the request
  * @return {Promise}     
  */
-function tinderPost (path, data) {
+function tinderPost(path, data) {
     var opts = configureOptions(path, data);
     opts.method = 'POST';
 

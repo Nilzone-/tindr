@@ -39,18 +39,15 @@ function tinderPromise(options) {
 
     return new Promise(function (resolve, reject) {
         return request(options, function (err, response, body) {
-            if (!err && response.statusCode === 200) {
-                try {
-                    resolve(JSON.parse(body));
-                } catch (err) {
-                    reject(err);
+            try {
+                var data = JSON.parse(body);
+                if (!err && response.statusCode === 200) {
+                    resolve(data);
+                } else {
+                    reject(err || data);
                 }
-            } else {
-                try {
-                    reject(err || JSON.parse(body));
-                } catch (err) {
-                    reject('Unable to parse body: ' + err);
-                }
+            } catch (err) {
+                reject('Unable to parse body: ' + err);
             }
         });
     });

@@ -44,28 +44,22 @@ module.exports = (function () {
         var options = configureOptions(method, path, data);
 
         return new Promise(function (resolve, reject) {
-                return request(options, function (err, response, body) {
-                    var data = null;
+            return request(options, function (err, response, body) {
+                var data = null;
 
-                    try {
-                        data = JSON.parse(body);
-                    } catch (err) {
-                        return reject('Unable to parse body => ' + err);
-                    }
+                try {
+                    data = JSON.parse(body);
+                } catch (err) {
+                    return reject('Unable to parse body => ' + err);
+                }
 
-                    if (!err && response.statusCode === 200) {
-                        resolve(data);
-                    } else {
-                        reject(err || data);
-                    }
-                });
-            })
-            .then(function (data) {
-                return data;
-            })
-            .catch(function (err) {
-                return Promise.reject(err);
-            })
+                if (!err && response.statusCode === 200) {
+                    resolve(data);
+                } else {
+                    reject(err || data);
+                }
+            });
+        });
     }
 
 
